@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+group 'com.epam.microserviceslearning'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    annotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: bootVersion
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-core', version: awsSDKVersion
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: awsSDKVersion
+    implementation group: 'commons-io', name: 'commons-io', version: apacheCommonsIOVersion
+    implementation group: 'org.apache.tika', name: 'tika-core', version: tikaVersion
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: bootVersion
+    implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
+
+    compileOnly group: 'org.mapstruct', name: 'mapstruct', version: mapStructVersion
+    annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: mapStructVersion
+}
