@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group 'com.epam.microserviceslearning.processor'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    testCompileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    annotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
+    testAnnotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: bootVersion
+
+    implementation group: 'org.apache.tika', name: 'tika-core', version: tikaVersion
+    implementation group: 'org.apache.tika', name: 'tika-parsers-standard-package', version: tikaVersion
+
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
+}
+
+test {
+    useJUnitPlatform()
+}

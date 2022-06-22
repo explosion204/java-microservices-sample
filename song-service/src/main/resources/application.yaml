@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/metadata
+    username: postgres
+    password: postgres
+  jpa:
+    generate-ddl: true
+
+service:
+  csv:
+    max-length: 5
+
+server:
+  port: 8081

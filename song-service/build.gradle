@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group 'com.epam.microserviceslearning'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    annotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: bootVersion
+    implementation group: 'commons-io', name: 'commons-io', version: apacheCommonsIOVersion
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: bootVersion
+    implementation group: 'javax.validation', name: 'validation-api', version: validationApiVersion
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: bootVersion
+    implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
+
+    compileOnly group: 'org.mapstruct', name: 'mapstruct', version: mapStructVersion
+    annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: mapStructVersion
+}

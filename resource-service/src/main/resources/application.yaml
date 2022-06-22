@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/binary
+    username: postgres
+    password: postgres
+  jpa:
+    generate-ddl: true
+
+aws:
+  region: us-east-1
+  configuration:
+    endpoint:
+      enabled: true
+      url: http://localhost.localstack.cloud:4566
+  s3:
+    bucket:
+      name: binary
+
+service:
+  csv:
+    max-length: 199
