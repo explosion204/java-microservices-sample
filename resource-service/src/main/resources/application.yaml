@@ -1,10 +1,29 @@
 spring:
+  application:
+    name: resource-service
+
   datasource:
     url: jdbc:postgresql://localhost:5432/binary
     username: postgres
     password: postgres
+
   jpa:
     generate-ddl: true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  cloud:
+    stream:
+      bindings:
+        binary-processing-output:
+          destination: binary-processing
+          group: main
+          producer:
+            required-groups: main
 
 aws:
   region: us-east-1
@@ -19,3 +38,5 @@ aws:
 service:
   csv:
     max-length: 199
+  messaging:
+    binary-processing-binding: binary-processing-output

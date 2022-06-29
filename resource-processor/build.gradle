@@ -24,6 +24,10 @@ dependencies {
     testAnnotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: bootVersion
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: bootVersion
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: openFeignStarterVersion
+    implementation group: 'io.github.resilience4j', name: 'resilience4j-spring-boot2', version: resilience4jVersion
+
 
     implementation group: 'org.apache.tika', name: 'tika-core', version: tikaVersion
     implementation group: 'org.apache.tika', name: 'tika-parsers-standard-package', version: tikaVersion

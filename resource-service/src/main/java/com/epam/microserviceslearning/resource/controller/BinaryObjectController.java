@@ -32,7 +32,7 @@ public class BinaryObjectController {
         return ResponseEntity.ok(binaryObjectIdDto);
     }
 
-    @GetMapping(value = "{id}", produces = "application/octet-stream")
+    @GetMapping(value = "{id}", produces = "audio/mpeg")
     public ResponseEntity<Resource> download(@PathVariable("id") long id) {
         final byte[] data = binaryObjectService.download(id);
         final ByteArrayResource resource = new ByteArrayResource(data);
