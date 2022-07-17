@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version "$bootVersion"
 }
 
 group 'com.epam.microserviceslearning.processor'
@@ -25,16 +26,31 @@ dependencies {
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: bootVersion
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: bootVersion
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-stream-rabbit', version: streamStarterRabbitVersion
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: openFeignStarterVersion
     implementation group: 'io.github.resilience4j', name: 'resilience4j-spring-boot2', version: resilience4jVersion
 
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: jaxbApiVersion
 
     implementation group: 'org.apache.tika', name: 'tika-core', version: tikaVersion
     implementation group: 'org.apache.tika', name: 'tika-parsers-standard-package', version: tikaVersion
+    implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
 
-    testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: bootVersion
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: cucumberVersion
+    testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: cucumberVersion
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: cucumberVersion
+    testImplementation group: 'org.testcontainers', name: 'testcontainers', version: testContainersVersion
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: testContainersVersion
+    testImplementation group: 'org.testcontainers', name: 'rabbitmq', version: testContainersVersion
+    testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-contract-stub-runner', version: cloudContractVersion
+    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: vintageVersion
 }
 
 test {
     useJUnitPlatform()
+}
+
+bootJar {
+    archiveName 'resource-processor.jar'
 }

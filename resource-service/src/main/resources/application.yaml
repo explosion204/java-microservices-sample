@@ -3,18 +3,18 @@ spring:
     name: resource-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/binary
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://${RESOURCE_DB_HOST:localhost}:${RESOURCE_DB_PORT:5432}/${RESOURCE_DB_NAME:binary}
+    username: ${RESOURCE_DB_USERNAME:postgres}
+    password: ${RESOURCE_DB_PASSWORD:postgres}
 
   jpa:
     generate-ddl: true
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5672}
+    username: ${RABBIT_USERNAME:guest}
+    password: ${RABBIT_PASSWORD:guest}
 
   cloud:
     stream:
@@ -30,7 +30,7 @@ aws:
   configuration:
     endpoint:
       enabled: true
-      url: http://localhost.localstack.cloud:4566
+      url: ${AWS_CONFIGURATION_ENDPOINT_URL:http://localhost.localstack.cloud:4566}
   s3:
     bucket:
       name: binary

@@ -1,5 +1,6 @@
 package com.epam.microserviceslearning.processor;
 
+import com.google.gson.Gson;
 import io.github.resilience4j.retry.RetryRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,5 +28,8 @@ public class ResourceProcessorConfiguration {
         return new Mp3Parser();
     }
 
-
+    @Bean
+    public Gson gson() {
+        return new Gson();
+    }
 }
