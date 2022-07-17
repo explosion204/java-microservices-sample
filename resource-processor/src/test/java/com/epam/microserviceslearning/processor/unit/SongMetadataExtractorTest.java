@@ -1,7 +1,9 @@
-package com.epam.microserviceslearning.processor.service;
+package com.epam.microserviceslearning.processor.unit;
 
 import com.epam.microserviceslearning.processor.ResourceProcessorConfiguration;
 import com.epam.microserviceslearning.processor.model.SongMetadataDto;
+import com.epam.microserviceslearning.processor.service.SongMetadataExtractor;
+import io.github.resilience4j.retry.internal.InMemoryRetryRegistry;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -20,7 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
         ResourceProcessorConfiguration.class,
-        SongMetadataExtractor.class
+        SongMetadataExtractor.class,
+        InMemoryRetryRegistry.class
 })
 class SongMetadataExtractorTest {
     @Autowired
