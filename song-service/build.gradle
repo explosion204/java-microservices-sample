@@ -1,8 +1,9 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version "$bootVersion"
 }
 
-group 'com.epam.microserviceslearning'
+group 'com.epam.microserviceslearning.song'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -17,15 +18,39 @@ configurations {
 }
 
 dependencies {
+    implementation group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
     annotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: bootVersion
     implementation group: 'commons-io', name: 'commons-io', version: apacheCommonsIOVersion
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: apacheCommonsLangVersion
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: bootVersion
     implementation group: 'javax.validation', name: 'validation-api', version: validationApiVersion
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: bootVersion
     implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
 
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: jaxbApiVersion
+
     compileOnly group: 'org.mapstruct', name: 'mapstruct', version: mapStructVersion
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: mapStructVersion
+
+    testImplementation group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
+    testAnnotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: bootVersion
+    testImplementation group: 'com.h2database', name: 'h2', version: h2Version
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: cucumberVersion
+    testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: cucumberVersion
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: cucumberVersion
+    testImplementation group: 'org.testcontainers', name: 'testcontainers', version: testContainersVersion
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: testContainersVersion
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: testContainersVersion
+    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: vintageVersion
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    archiveName 'song-service.jar'
 }

@@ -1,5 +1,9 @@
 plugins {
     id 'java'
+    id 'groovy'
+    id 'org.springframework.boot' version "$bootVersion"
+    id 'org.springframework.cloud.contract' version "$cloudContractVersion"
+    id 'maven-publish'
 }
 
 group 'com.epam.microserviceslearning'
@@ -14,12 +18,18 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+
+    testCompileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 dependencies {
+    implementation group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
     annotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: bootVersion
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-stream-rabbit', version: streamStarterRabbitVersion
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-core', version: awsSDKVersion
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: awsSDKVersion
     implementation group: 'commons-io', name: 'commons-io', version: apacheCommonsIOVersion
@@ -29,4 +39,53 @@ dependencies {
 
     compileOnly group: 'org.mapstruct', name: 'mapstruct', version: mapStructVersion
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: mapStructVersion
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: jaxbApiVersion
+    implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
+
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: bootVersion
+    testImplementation group: 'com.h2database', name: 'h2', version: h2Version
+    testImplementation group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
+    testAnnotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: cucumberVersion
+    testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: cucumberVersion
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: cucumberVersion
+    testImplementation group: 'org.testcontainers', name: 'testcontainers', version: testContainersVersion
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: testContainersVersion
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: testContainersVersion
+    testImplementation group: 'org.testcontainers', name: 'localstack', version: testContainersVersion
+    testImplementation group: 'org.testcontainers', name: 'rabbitmq', version: testContainersVersion
+    testImplementation group: 'org.awaitility', name: 'awaitility', version: awaitilityVersion
+    testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-verifier', version: cloudContractVersion
+    testImplementation("io.rest-assured:spring-mock-mvc:$restAssuredVersion") {
+        exclude group: 'org.apache.groovy'
+    }
+    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: vintageVersion
+    testImplementation('org.springframework.cloud:spring-cloud-stream') {
+        artifact {
+            name = "spring-cloud-stream"
+            extension = "jar"
+            type = "test-jar"
+            classifier = "test-binder"
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    archiveName 'resource-service.jar'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact verifierStubsJar
+        }
+    }
+}
+
+contracts {
+    baseClassForTests = 'com.epam.microserviceslearning.resource.contract.BaseContractTest'
 }

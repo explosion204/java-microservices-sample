@@ -122,8 +122,11 @@ public class BinaryObjectService {
 
     private void sendMessage(BinaryObject binaryObject) {
         if (binaryObject.getStatus() == SUCCESS) {
-            messageService.sendMessage(binaryObject.getId());
+            final BinaryObjectIdDto idDto = BinaryObjectIdDto.builder()
+                    .id(binaryObject.getId())
+                    .build();
 
+            messageService.sendMessage(idDto);
         } else {
             log.warn("Last upload wasn't successful, message is not sent");
         }
