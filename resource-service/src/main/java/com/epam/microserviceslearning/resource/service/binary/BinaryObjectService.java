@@ -6,6 +6,7 @@ import com.epam.microserviceslearning.resource.exception.BinaryNotFoundException
 import com.epam.microserviceslearning.resource.exception.BinaryUploadException;
 import com.epam.microserviceslearning.resource.persistence.db.BinaryObjectRepository;
 import com.epam.microserviceslearning.resource.persistence.storage.StorageService;
+import com.epam.microserviceslearning.resource.service.messaging.MessageService;
 import com.epam.microserviceslearning.resource.service.model.BinaryObjectIdDto;
 import com.epam.microserviceslearning.resource.service.model.BinaryObjectIdListDto;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.epam.microserviceslearning.resource.domain.BinaryObject.Status.SUCCESS;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -29,6 +32,7 @@ public class BinaryObjectService {
     private final BinaryObjectRepository binaryObjectRepository;
     private final StorageService storageService;
     private final BinaryValidator validator;
+    private final MessageService messageService;
 
     @SneakyThrows
     public byte[] download(long id) {
@@ -54,7 +58,7 @@ public class BinaryObjectService {
         validator.validate(file);
 
         final String filename = UUID.randomUUID().toString();
-        BinaryObject.Status status = BinaryObject.Status.SUCCESS;
+        BinaryObject.Status status = SUCCESS;
 
         try {
             storageService.store(file, filename);
@@ -69,6 +73,8 @@ public class BinaryObjectService {
                 .build();
 
         final BinaryObject savedObject = binaryObjectRepository.save(newObject);
+        sendMessage(savedObject);
+
         return BinaryObjectIdDto.builder()
                 .id(savedObject.getId())
                 .build();
@@ -112,5 +118,14 @@ public class BinaryObjectService {
         binaryObjectRepository.save(binaryObject);
 
         return true;
+    }
+
+    private void sendMessage(BinaryObject binaryObject) {
+        if (binaryObject.getStatus() == SUCCESS) {
+            messageService.sendMessage(binaryObject.getId());
+
+        } else {
+            log.warn("Last upload wasn't successful, message is not sent");
+        }
     }
 }

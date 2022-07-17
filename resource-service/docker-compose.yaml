@@ -12,3 +12,9 @@ services:
       - '.db.env'
     ports:
       - '5432:5432'
+
+  rabbit:
+    image: 'rabbitmq:latest'
+    ports:
+      - '5672:5672'
+      - '15672:15672'

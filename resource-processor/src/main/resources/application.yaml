@@ -1,0 +1,40 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: resource-service
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  cloud:
+    stream:
+      function:
+        bindings:
+          input-in-0: binary-processing-input
+
+      bindings:
+        binary-processing-input:
+          destination: binary-processing
+          group: main
+          consumer:
+            max-attempts: 3
+            auto-bind-dlq: true
+
+resilience4j:
+  retry:
+    instances:
+      save-metadata:
+        maxRetryAttempts: 5
+      download-file:
+        maxRetryAttempts: 5
+
+resource-service:
+  url: http://localhost:8080
+
+song-service:
+  url: http://localhost:8081
