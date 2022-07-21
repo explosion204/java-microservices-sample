@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group 'com.epam.microserviceslearning'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-suite', version: junit5Version
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junit5Version
+    testImplementation group: 'org.testcontainers', name: 'testcontainers', version: testContainersVersion
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: testContainersVersion
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: cucumberVersion
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: cucumberVersion
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit-platform-engine', version: cucumberVersion
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+    testImplementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
+    testImplementation group: 'org.awaitility', name: 'awaitility', version: awaitilityVersion
+
+    testImplementation group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
+    testAnnotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
+}
+
+test {
+    useJUnitPlatform()
+}

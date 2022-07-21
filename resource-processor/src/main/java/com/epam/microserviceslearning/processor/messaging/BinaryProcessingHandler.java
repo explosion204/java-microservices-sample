@@ -2,21 +2,20 @@ package com.epam.microserviceslearning.processor.messaging;
 
 import com.epam.microserviceslearning.processor.client.ResourceServiceClient;
 import com.epam.microserviceslearning.processor.client.SongServiceClient;
+import com.epam.microserviceslearning.processor.model.IdDto;
 import com.epam.microserviceslearning.processor.model.SongMetadataDto;
-import com.epam.microserviceslearning.processor.model.SongMetadataIdDto;
 import com.epam.microserviceslearning.processor.service.SongMetadataExtractor;
+import com.google.gson.Gson;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.function.Consumer;
 
 @Component
@@ -26,6 +25,7 @@ public class BinaryProcessingHandler {
     private final ResourceServiceClient resourceServiceClient;
     private final SongMetadataExtractor metadataExtractor;
     private final SongServiceClient songServiceClient;
+    private final Gson gson;
 
     @Bean
     public Consumer<Message<String>> input() {
@@ -34,7 +34,8 @@ public class BinaryProcessingHandler {
 
     @SneakyThrows
     private void handle(Message<String> message) {
-        long resourceId = Long.parseLong(message.getPayload());
+        long resourceId = gson.fromJson(message.getPayload(), IdDto.class).getId();
+
         log.info("Received a message with resourceId = {}", resourceId);
 
         @Cleanup InputStream file = downloadFile(resourceId);

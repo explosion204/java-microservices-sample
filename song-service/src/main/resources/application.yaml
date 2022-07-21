@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/metadata
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://${SONG_DB_HOST:localhost}:${SONG_DB_PORT:5433}/${SONG_DB_NAME:metadata}
+    username: ${SONG_DB_USERNAME:postgres}
+    password: ${SONG_DB_PASSWORD:postgres}
   jpa:
     generate-ddl: true
 

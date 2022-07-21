@@ -6,10 +6,10 @@ spring:
     name: resource-service
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5672}
+    username: ${RABBIT_USERNAME:guest}
+    password: ${RABBIT_PASSWORD:guest}
 
   cloud:
     stream:
@@ -34,7 +34,7 @@ resilience4j:
         maxRetryAttempts: 5
 
 resource-service:
-  url: http://localhost:8080
+  url: ${RESOURCE_SERVICE_URL:http://localhost:8080}
 
 song-service:
-  url: http://localhost:8081
+  url: ${SONG_SERVICE_URL:http://localhost:8081}
