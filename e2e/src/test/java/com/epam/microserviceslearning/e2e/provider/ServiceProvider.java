@@ -5,6 +5,7 @@ import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 import java.io.File;
+import java.util.Optional;
 
 public class ServiceProvider {
     private static final String URL_PATTERN = "http://%s:%s";
@@ -17,6 +18,7 @@ public class ServiceProvider {
         final File composeFile = getComposeFile();
 
         final DockerComposeContainer testEnvironment = new DockerComposeContainer(composeFile)
+                .withEnv("ENV_FILE", getEnvironmentVariable("ENV_FILE", ".env"))
                 .withExposedService(RESOURCE_SERVICE_NAME, RESOURCE_SERVICE_PORT, buildHealthCheck())
                 .withExposedService(SONG_SERVICE_NAME, SONG_SERVICE_PORT, buildHealthCheck());
 
@@ -39,5 +41,10 @@ public class ServiceProvider {
     private HttpWaitStrategy buildHealthCheck() {
         return Wait.forHttp("/")
                 .forStatusCode(404);
+    }
+
+    private String getEnvironmentVariable(String key, String defaultValue) {
+        return Optional.ofNullable(System.getenv(key))
+                .orElse(defaultValue);
     }
 }

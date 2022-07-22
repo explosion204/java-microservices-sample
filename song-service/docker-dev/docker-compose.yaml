@@ -5,7 +5,7 @@ volumes:
 
 services:
   db:
-    image: 'postgres:latest'
+    image: 'postgres:14.4-alpine'
     volumes:
       - db_data:/var/lib/postgresql/data
     env_file:
