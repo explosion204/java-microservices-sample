@@ -13,7 +13,7 @@ public class TestContainersHooks {
     }
 
     private static void launchRabbit() {
-        rabbitContainer = new RabbitMQContainer(DockerImageName.parse("rabbitmq"))
+        rabbitContainer = new RabbitMQContainer(DockerImageName.parse("rabbitmq:3.10.6-alpine"))
                 .withExposedPorts(5672);
 
         rabbitContainer.start();

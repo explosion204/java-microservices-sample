@@ -11,7 +11,7 @@ Contract.make {
     response {
         status OK()
         headers {
-            contentType applicationJson()
+            contentType 'audio/mpeg'
         }
         body(fileAsBytes('valid.mp3'))
     }

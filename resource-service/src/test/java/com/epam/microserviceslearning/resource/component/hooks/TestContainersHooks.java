@@ -36,7 +36,7 @@ public class TestContainersHooks {
     }
 
     private static void launchPostgres() {
-        postgresContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgres"))
+        postgresContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgres:14.4-alpine"))
                 .withDatabaseName("test")
                 .withUsername("postgres")
                 .withPassword("postgres")
@@ -50,7 +50,7 @@ public class TestContainersHooks {
     }
 
     private static void launchRabbit() {
-        rabbitContainer = new RabbitMQContainer(DockerImageName.parse("rabbitmq"))
+        rabbitContainer = new RabbitMQContainer(DockerImageName.parse("rabbitmq:3.10.6-alpine"))
                 .withExposedPorts(5672);
 
         rabbitContainer.start();
