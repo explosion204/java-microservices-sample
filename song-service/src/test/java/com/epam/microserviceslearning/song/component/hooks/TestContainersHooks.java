@@ -20,7 +20,7 @@ public class TestContainersHooks {
     }
 
     private static void launchPostgres() {
-        postgresContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgres"))
+        postgresContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgres:14.4-alpine"))
                 .withDatabaseName("test")
                 .withUsername("postgres")
                 .withPassword("postgres")
