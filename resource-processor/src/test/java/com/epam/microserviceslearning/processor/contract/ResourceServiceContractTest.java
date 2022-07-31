@@ -19,7 +19,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 )
 @ExtendWith(SpringExtension.class)
 @AutoConfigureStubRunner(
-        ids = "com.epam.microserviceslearning:resource-service:+:stubs:8080",
+        ids = "com.epam.microserviceslearning:resource-service:+:stubs:8090",
         stubsMode = StubRunnerProperties.StubsMode.LOCAL
 )
 class ResourceServiceContractTest {

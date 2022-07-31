@@ -33,8 +33,5 @@ resilience4j:
       download-file:
         maxRetryAttempts: 5
 
-resource-service:
-  url: ${RESOURCE_SERVICE_URL:http://localhost:8080}
-
-song-service:
-  url: ${SONG_SERVICE_URL:http://localhost:8081}
+service-gateway:
+  url: ${SERVICE_GATEWAY_URL:http://localhost:8090}

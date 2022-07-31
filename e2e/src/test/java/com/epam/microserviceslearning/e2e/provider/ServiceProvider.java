@@ -9,28 +9,25 @@ import java.util.Optional;
 
 public class ServiceProvider {
     private static final String URL_PATTERN = "http://%s:%s";
-    private static final String RESOURCE_SERVICE_NAME = "resource-service";
-    private static final String SONG_SERVICE_NAME = "song-service";
-    private static final int RESOURCE_SERVICE_PORT = 8080;
-    private static final int SONG_SERVICE_PORT = 8081;
+    private static final String SERVICE_GATEWAY_NAME = "service-gateway";
+    private static final String SERVICE_REGISTRY_NAME = "service-registry";
+    private static final int SERVICE_GATEWAY_PORT = 8090;
+    private static final int SERVICE_REGISTRY_PORT = 8761;
 
     public void launchEnvironment() {
         final File composeFile = getComposeFile();
 
         final DockerComposeContainer testEnvironment = new DockerComposeContainer(composeFile)
                 .withEnv("ENV_FILE", getEnvironmentVariable("ENV_FILE", ".env"))
-                .withExposedService(RESOURCE_SERVICE_NAME, RESOURCE_SERVICE_PORT, buildHealthCheck())
-                .withExposedService(SONG_SERVICE_NAME, SONG_SERVICE_PORT, buildHealthCheck());
+                .withExposedService(SERVICE_REGISTRY_NAME, SERVICE_REGISTRY_PORT, buildHealthCheck("/", 200))
+                .withExposedService(SERVICE_GATEWAY_NAME, SERVICE_GATEWAY_PORT, buildHealthCheck("/resources/0", 404))
+                .withExposedService(SERVICE_GATEWAY_NAME, SERVICE_GATEWAY_PORT, buildHealthCheck("/songs/0", 404));
 
         testEnvironment.start();
     }
 
-    public String getResourceServiceUrl() {
-        return String.format(URL_PATTERN, "localhost", RESOURCE_SERVICE_PORT);
-    }
-
-    public String getSongServiceUrl() {
-        return String.format(URL_PATTERN, "localhost", SONG_SERVICE_PORT);
+    public String getServiceGatewayUrl() {
+        return String.format(URL_PATTERN, "localhost", SERVICE_GATEWAY_PORT);
     }
 
     private File getComposeFile() {
@@ -38,10 +35,11 @@ public class ServiceProvider {
         return new File(classLoader.getResource("docker-compose.yaml").getFile());
     }
 
-    private HttpWaitStrategy buildHealthCheck() {
-        return Wait.forHttp("/")
-                .forStatusCode(404);
+    private HttpWaitStrategy buildHealthCheck(String url, int statusCode) {
+        return Wait.forHttp(url)
+                .forStatusCode(statusCode);
     }
+
 
     private String getEnvironmentVariable(String key, String defaultValue) {
         return Optional.ofNullable(System.getenv(key))

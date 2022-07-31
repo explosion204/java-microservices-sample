@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(value = "resource-service-client", url = "${resource-service.url}")
+@FeignClient(value = "resource-service-client", url = "${service-gateway.url}")
 public interface ResourceServiceClient {
     @GetMapping(value = "/resources/{id}")
     @Retry(name = "download-file")
