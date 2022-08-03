@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(value = "song-service-client", url = "${song-service.url}")
+@FeignClient(value = "song-service-client", url = "${service-gateway.url}")
 public interface SongServiceClient {
     @PostMapping(value = "/songs")
     @Retry(name = "save-metadata")

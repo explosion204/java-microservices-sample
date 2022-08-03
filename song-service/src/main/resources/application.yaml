@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: song-service
+
   datasource:
     url: jdbc:postgresql://${SONG_DB_HOST:localhost}:${SONG_DB_PORT:5433}/${SONG_DB_NAME:metadata}
     username: ${SONG_DB_USERNAME:postgres}
@@ -12,3 +15,8 @@ service:
 
 server:
   port: 8081
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}

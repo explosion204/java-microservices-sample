@@ -26,8 +26,8 @@ public class E2ETestSteps {
     @BeforeAll
     public static void beforeAll() {
         serviceProvider.launchEnvironment();
-        resourceServiceClient = new ResourceServiceClient(serviceProvider.getResourceServiceUrl());
-        songServiceClient = new SongServiceClient(serviceProvider.getSongServiceUrl());
+        resourceServiceClient = new ResourceServiceClient(serviceProvider.getServiceGatewayUrl());
+        songServiceClient = new SongServiceClient(serviceProvider.getServiceGatewayUrl());
     }
 
     @Given("services are up and running")

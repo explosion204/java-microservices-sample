@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version "$bootVersion"
+}
+
+group 'com.epam.microserviceslearning.registry'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: bootVersion
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-server', version: eurekaStarterVersion
+    implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
+}
+
+bootJar {
+    archiveName 'registry.jar'
+}

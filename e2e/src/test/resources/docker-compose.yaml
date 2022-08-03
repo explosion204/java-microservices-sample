@@ -7,35 +7,30 @@ volumes:
 services:
   resource-service:
     image: resource-service:latest
-    ports:
-      - 8080:8080
     env_file:
       - ${ENV_FILE}
     depends_on:
       - resource-db
       - localstack
       - rabbit
+      - service-registry
 
   song-service:
     image: song-service:latest
-    ports:
-      - 8081:8081
     env_file:
       - ${ENV_FILE}
     depends_on:
       - song-db
       - rabbit
+      - service-registry
 
   resource-processor:
     image: resource-processor:latest
-    ports:
-      - 8082:8082
     env_file:
       - ${ENV_FILE}
     depends_on:
       - rabbit
-      - resource-service
-      - song-service
+      - service-gateway
 
   resource-db:
     image: postgres:14.4-alpine
@@ -47,8 +42,6 @@ services:
       - POSTGRES_DB=${RESOURCE_DB_NAME}
       - POSTGRES_USER=${RESOURCE_DB_USERNAME}
       - POSTGRES_PASSWORD=${RESOURCE_DB_PASSWORD}
-    ports:
-      - 5432:5432
 
   song-db:
     image: postgres:14.4-alpine
@@ -60,17 +53,23 @@ services:
       - POSTGRES_DB=${SONG_DB_NAME}
       - POSTGRES_USER=${SONG_DB_USERNAME}
       - POSTGRES_PASSWORD=${SONG_DB_PASSWORD}
-    ports:
-      - 5433:5432
 
   localstack:
     image: 'localstack/localstack:latest'
-    ports:
-      - '4566:4566'
 
   rabbit:
     image: rabbitmq:3.10.6-alpine
+
+  service-registry:
+    image: service-registry:latest
     ports:
-      - '5672:5672'
-      - '15672:15672'
-  
+      - 8761:8761
+
+  service-gateway:
+    image: service-gateway:latest
+    env_file:
+      - ${ENV_FILE}
+    ports:
+      - 8090:8090
+    depends_on:
+      - service-registry
