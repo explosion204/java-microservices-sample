@@ -19,6 +19,9 @@ public class BinaryObjectEntity {
     @ToString.Exclude
     private long id;
 
+    @Column(name = "storage_id")
+    private long storageId;
+
     @Column(name = "filename")
     private String filename;
 

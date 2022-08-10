@@ -1,6 +1,7 @@
 package com.epam.microserviceslearning.resource.controller;
 
 import com.epam.microserviceslearning.common.csv.CsvService;
+import com.epam.microserviceslearning.common.storage.factory.StorageType;
 import com.epam.microserviceslearning.resource.service.model.BinaryObjectIdDto;
 import com.epam.microserviceslearning.resource.service.model.BinaryObjectIdListDto;
 import com.epam.microserviceslearning.resource.service.binary.BinaryObjectService;
@@ -12,12 +13,17 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/resources")
@@ -27,9 +33,13 @@ public class BinaryObjectController {
     private final BinaryObjectService binaryObjectService;
 
     @PostMapping
-    public ResponseEntity<BinaryObjectIdDto> upload(InputStream file) {
-        final BinaryObjectIdDto binaryObjectIdDto = binaryObjectService.save(file);
-        return ResponseEntity.ok(binaryObjectIdDto);
+    @ResponseStatus(OK)
+    public BinaryObjectIdDto upload(
+            @RequestParam(name = "storageType", defaultValue = "staging") StorageType storageType,
+            @RequestBody byte[] bytes
+    ) {
+        final InputStream file = new ByteArrayInputStream(bytes);
+        return binaryObjectService.save(file, storageType);
     }
 
     @GetMapping(value = "{id}", produces = "audio/mpeg")
@@ -43,9 +53,9 @@ public class BinaryObjectController {
     }
 
     @DeleteMapping
-    public ResponseEntity<BinaryObjectIdListDto> delete(@RequestParam("id") String idsCsv) {
+    @ResponseStatus(OK)
+    public BinaryObjectIdListDto delete(@RequestParam("id") String idsCsv) {
         final List<Long> ids = csvService.parse(idsCsv);
-        final BinaryObjectIdListDto deletedIds = binaryObjectService.delete(ids);
-        return ResponseEntity.ok(deletedIds);
+        return binaryObjectService.delete(ids);
     }
 }

@@ -12,5 +12,5 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface SongMetadataEntityMapper {
     SongMetadata toSongMetadata(SongMetadataEntity songMetadataEntity);
-    SongMetadataEntity tooSongMetadataEntity(SongMetadata songMetadata);
+    SongMetadataEntity toSongMetadataEntity(SongMetadata songMetadata);
 }

@@ -29,14 +29,14 @@ public class SongMetadataRepositoryImpl implements SongMetadataRepository {
 
     @Override
     public SongMetadata save(SongMetadata songMetadata) {
-        final SongMetadataEntity entity = mapper.tooSongMetadataEntity(songMetadata);
+        final SongMetadataEntity entity = mapper.toSongMetadataEntity(songMetadata);
         final SongMetadataEntity updatedEntity = jpaRepository.save(entity);
         return mapper.toSongMetadata(updatedEntity);
     }
 
     @Override
     public void delete(SongMetadata songMetadata) {
-        final SongMetadataEntity entity = mapper.tooSongMetadataEntity(songMetadata);
+        final SongMetadataEntity entity = mapper.toSongMetadataEntity(songMetadata);
         jpaRepository.delete(entity);
     }
 }

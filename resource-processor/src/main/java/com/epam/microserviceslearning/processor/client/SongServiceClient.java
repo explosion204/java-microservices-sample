@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(value = "song-service-client", url = "${service-gateway.url}")
 public interface SongServiceClient {
     @PostMapping(value = "/songs")
-    @Retry(name = "save-metadata")
+    @Retry(name = "rest-retry")
     IdDto saveMetadata(@RequestBody SongMetadataDto metadata);
 }

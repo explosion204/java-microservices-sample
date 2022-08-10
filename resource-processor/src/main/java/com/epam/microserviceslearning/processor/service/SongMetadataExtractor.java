@@ -29,7 +29,7 @@ public class SongMetadataExtractor {
 
     private final Mp3Parser parser;
 
-    public SongMetadataDto extract(InputStream file, long resourceId) {
+    public SongMetadataDto extract(InputStream file) {
         final Metadata metadata = parseMetadata(file);
 
         final String name = metadata.get(NAME_KEY);
@@ -44,7 +44,6 @@ public class SongMetadataExtractor {
         final int year = Year.parse(dateString).getValue();
 
         return SongMetadataDto.builder()
-                .resourceId(resourceId)
                 .name(name)
                 .artist(artist)
                 .album(album)
@@ -60,6 +59,7 @@ public class SongMetadataExtractor {
         final ParseContext context = new ParseContext();
 
         parser.parse(file, contentHandler, metadata, context);
+        file.reset();
 
         return metadata;
     }

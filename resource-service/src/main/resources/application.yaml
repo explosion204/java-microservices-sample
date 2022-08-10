@@ -45,3 +45,20 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+
+resilience4j:
+  retry:
+    instances:
+      rest-retry:
+        maxRetryAttempts: 5
+
+  circuitbreaker:
+    instances:
+      rest-circuit-breaker:
+        failureRateThreshold: 75
+        slidingWindowType: TIME_BASED
+        slidingWindowSize: 30
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+service-gateway:
+  url: ${SERVICE_GATEWAY_URL:http://localhost:8090}

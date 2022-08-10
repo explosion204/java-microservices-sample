@@ -1,5 +1,6 @@
 package com.epam.microserviceslearning.resource.service.binary;
 
+import com.epam.microserviceslearning.common.storage.factory.StorageType;
 import com.epam.microserviceslearning.resource.domain.BinaryObject;
 import com.epam.microserviceslearning.resource.exception.BinaryDeletedException;
 import com.epam.microserviceslearning.resource.exception.BinaryNotFoundException;
@@ -48,20 +49,22 @@ public class BinaryObjectService {
         }
 
         final String filename = binaryObject.getFilename();
-        final InputStream inputStream = storageService.read(filename);
+        final long storageId = binaryObject.getStorageId();
+        final InputStream inputStream = storageService.read(storageId, filename);
 
         return IOUtils.toByteArray(inputStream);
     }
 
     @Transactional
-    public BinaryObjectIdDto save(InputStream file) {
+    public BinaryObjectIdDto save(InputStream file, StorageType storageType) {
         validator.validate(file);
 
         final String filename = UUID.randomUUID().toString();
         BinaryObject.Status status = SUCCESS;
+        long storageId = -1;
 
         try {
-            storageService.store(file, filename);
+            storageId = storageService.store(file, filename, storageType);
         } catch (BinaryUploadException e) {
             status = BinaryObject.Status.FAILED;
             log.error("An error occurred during upload of file '{}', cause: {}", filename, e.getCause());
@@ -70,10 +73,14 @@ public class BinaryObjectService {
         final BinaryObject newObject = BinaryObject.builder()
                 .filename(filename)
                 .status(status)
+                .storageId(storageId)
                 .build();
 
         final BinaryObject savedObject = binaryObjectRepository.save(newObject);
-        sendMessage(savedObject);
+
+        if (storageType == StorageType.STAGING) {
+            sendMessage(savedObject);
+        }
 
         return BinaryObjectIdDto.builder()
                 .id(savedObject.getId())
@@ -112,7 +119,8 @@ public class BinaryObjectService {
         }
 
         final String filename = binaryObject.getFilename();
-        storageService.delete(filename);
+        final long storageId = binaryObject.getStorageId();
+        storageService.delete(storageId, filename);
 
         binaryObject.setStatus(BinaryObject.Status.DELETED);
         binaryObjectRepository.save(binaryObject);
