@@ -1,7 +1,5 @@
 package com.epam.microserviceslearning.gateway;
 
-import com.google.gson.Gson;
-import org.apache.http.message.HeaderGroup;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +13,7 @@ import static org.springframework.http.HttpMethod.POST;
 public class ServiceGatewayConfiguration {
     private static final String RESOURCE_SERVICE_URI = "lb://resource-service";
     private static final String SONG_SERVICE_URI = "lb://song-service";
+    private static final String STORAGE_SERVICE_URI = "lb://storage-service";
 
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
@@ -31,6 +30,7 @@ public class ServiceGatewayConfiguration {
                         .and()
                         .method(DELETE)
                         .uri(RESOURCE_SERVICE_URI))
+
                 .route(r -> r.path("/songs/{id:\\d+}")
                         .and()
                         .method(GET)
@@ -43,6 +43,28 @@ public class ServiceGatewayConfiguration {
                         .and()
                         .method(DELETE)
                         .uri(SONG_SERVICE_URI))
+
+                .route(r -> r.path("/storages/random/{type:\\w+}")
+                        .and()
+                        .method(GET)
+                        .uri(STORAGE_SERVICE_URI))
+                .route(r -> r.path("/storages/{id:-?\\d+}")
+                        .and()
+                        .method(GET)
+                        .uri(STORAGE_SERVICE_URI))
+                .route(r -> r.path("/storages")
+                        .and()
+                        .method(GET)
+                        .uri(STORAGE_SERVICE_URI))
+                .route(r -> r.path("/storages")
+                        .and()
+                        .method(POST)
+                        .uri(STORAGE_SERVICE_URI))
+                .route(r -> r.path("/storages")
+                        .and()
+                        .method(DELETE)
+                        .uri(STORAGE_SERVICE_URI))
+
                 .build();
     }
 }

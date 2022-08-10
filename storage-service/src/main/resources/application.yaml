@@ -1,0 +1,27 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: storage-service
+
+  datasource:
+    url: jdbc:postgresql://${STORAGE_DB_HOST:localhost}:${STORAGE_DB_PORT:5432}/${STORAGE_DB_NAME:storage}
+    username: ${STORAGE_DB_USERNAME:postgres}
+    password: ${STORAGE_DB_PASSWORD:postgres}
+
+  jpa:
+    generate-ddl: true
+
+  jackson:
+    mapper:
+      ACCEPT_CASE_INSENSITIVE_ENUMS: true
+
+service:
+  csv:
+    max-length: 199
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}

@@ -1,4 +1,4 @@
-package com.epam.microserviceslearning.resource.config;
+package com.epam.microserviceslearning.common.storage.config;
 
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.client.builder.AwsClientBuilder;
@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("!test")
 public class AWSConfiguration {
     @Value("${aws.configuration.endpoint.url:}")
     private String configEndpointUrl;

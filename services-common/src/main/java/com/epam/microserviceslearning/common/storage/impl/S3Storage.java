@@ -1,35 +1,27 @@
-package com.epam.microserviceslearning.resource.persistence.storage.impl;
+package com.epam.microserviceslearning.common.storage.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
-import com.epam.microserviceslearning.resource.exception.BinaryUploadException;
-import com.epam.microserviceslearning.resource.persistence.storage.StorageService;
-import lombok.RequiredArgsConstructor;
+import com.epam.microserviceslearning.common.storage.Storage;
+import com.epam.microserviceslearning.common.storage.exception.StorageException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.InputStream;
 
-@Service
-@RequiredArgsConstructor
 @Slf4j
-public class S3StorageService implements StorageService {
+public class S3Storage implements Storage {
     private final AmazonS3 s3;
+    private final String bucketName;
 
-    @Value("${aws.s3.bucket.name}")
-    private String bucketName;
+    public S3Storage(AmazonS3 s3, String bucketName) {
+        this.s3 = s3;
+        this.bucketName = bucketName;
 
-    @PostConstruct
-    void init() {
-        if (!s3.doesBucketExistV2(bucketName)) {
-            s3.createBucket(bucketName);
-        }
+        initBucket();
     }
 
     @SneakyThrows
@@ -43,7 +35,7 @@ public class S3StorageService implements StorageService {
             s3.putObject(request);
 
         } catch (Exception e) {
-            throw new BinaryUploadException(e);
+            throw new StorageException();
 
         } finally {
             tmpFile.delete();
@@ -69,4 +61,11 @@ public class S3StorageService implements StorageService {
 
         s3.deleteObject(bucketName, key);
     }
+
+    private void initBucket() {
+        if (!s3.doesBucketExistV2(bucketName)) {
+            s3.createBucket(bucketName);
+        }
+    }
+
 }

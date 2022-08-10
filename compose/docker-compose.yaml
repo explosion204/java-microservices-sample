@@ -3,6 +3,7 @@ version: '3.3'
 volumes:
   resource-db-data:
   song-db-data:
+  storage-db-data:
 
 services:
   resource-service:
@@ -23,7 +24,6 @@ services:
       - ${ENV_FILE}
     depends_on:
       - song-db
-      - rabbit
       - service-registry
 
   resource-processor:
@@ -33,6 +33,15 @@ services:
       - ${ENV_FILE}
     depends_on:
       - rabbit
+      - service-gateway
+
+  storage-service:
+    image: storage-service:latest
+    build: ../storage-service
+    env_file:
+      - ${ENV_FILE}
+    depends_on:
+      - storage-db
       - service-gateway
       
   resource-db:
@@ -56,6 +65,17 @@ services:
       - POSTGRES_DB=${SONG_DB_NAME}
       - POSTGRES_USER=${SONG_DB_USERNAME}
       - POSTGRES_PASSWORD=${SONG_DB_PASSWORD} 
+
+  storage-db:
+    image: postgres:14.4-alpine
+    volumes:
+      - storage-db-data:/var/lib/postgresql/data
+    env_file:
+      - ${ENV_FILE}
+    environment:
+      - POSTGRES_DB=${STORAGE_DB_NAME}
+      - POSTGRES_USER=${STORAGE_DB_USERNAME}
+      - POSTGRES_PASSWORD=${STORAGE_DB_PASSWORD} 
 
   localstack:
     image: 'localstack/localstack:latest'

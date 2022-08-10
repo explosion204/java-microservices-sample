@@ -28,10 +28,18 @@ spring:
 resilience4j:
   retry:
     instances:
-      save-metadata:
+      rest-retry:
         maxRetryAttempts: 5
-      download-file:
-        maxRetryAttempts: 5
+
+  circuitbreaker:
+    instances:
+      rest-circuit-breaker:
+        failureRateThreshold: 75
+        slidingWindowType: TIME_BASED
+        slidingWindowSize: 30
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+
 
 service-gateway:
   url: ${SERVICE_GATEWAY_URL:http://localhost:8090}

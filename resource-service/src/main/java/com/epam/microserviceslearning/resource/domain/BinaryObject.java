@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class BinaryObject {
     private long id;
+    private long storageId;
     private String filename;
     private Status status;
 

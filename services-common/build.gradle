@@ -35,4 +35,8 @@ dependencies {
 
     api group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-core', version: awsSDKVersion
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: awsSDKVersion
+    implementation group: 'commons-io', name: 'commons-io', version: apacheCommonsIOVersion
 }
