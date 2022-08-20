@@ -26,6 +26,6 @@ public class BaseContractTest {
                 .id(1)
                 .build();
 
-        when(binaryObjectService.save(any())).thenReturn(idDto);
+        when(binaryObjectService.save(any(), any())).thenReturn(idDto);
     }
 }

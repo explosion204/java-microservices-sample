@@ -3,7 +3,8 @@ Feature: binary processing
     Given file <filename> is loaded with expected metadata: <resource_id>, <name>, <artist>, <album>, <length>, <year>
     When file id = 1 is sent to input queue
     Then file id = <resource_id> is requested from resource-service
-    And metadata <resource_id>, <name>, <artist>, <album>, <length>, <year> is sent to song-service
+    And file id = <resource_id> is deleted from STAGING storage and uploaded to a PERMANENT one with new id
+    And metadata with new (incremented) <resource_id>, <name>, <artist>, <album>, <length>, <year> is sent to song-service
 
     Examples:
       | filename             | resource_id | name                                    | artist               | album                                         | length | year |

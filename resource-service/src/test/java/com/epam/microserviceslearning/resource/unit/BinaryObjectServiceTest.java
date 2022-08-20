@@ -12,13 +12,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.InputStream;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -27,7 +26,7 @@ class BinaryObjectServiceTest {
     @Mock
     private BinaryObjectRepository binaryObjectRepository;
 
-    @Spy
+    @Mock
     private StorageService storageService;
 
     @Mock
@@ -42,26 +41,38 @@ class BinaryObjectServiceTest {
     @Captor
     private ArgumentCaptor<String> filenameCaptor;
 
+    @Captor
+    private ArgumentCaptor<Long> storageIdCaptor;
+
     @Test
     void shouldDownload() {
         // given
         final long id = 1;
+        final long storageId = 1;
         final String filename = "filename";
 
         final BinaryObject binaryObject = BinaryObject.builder()
                 .id(id)
+                .storageId(storageId)
                 .filename(filename)
                 .status(BinaryObject.Status.SUCCESS)
                 .build();
 
         when(binaryObjectRepository.findById(id)).thenReturn(Optional.of(binaryObject));
-        when(storageService.read(filename)).thenReturn(InputStream.nullInputStream());
+        when(storageService.read(storageId, filename)).thenReturn(InputStream.nullInputStream());
 
         // when
         uut.download(id);
 
         // then
-        verify(storageService).read(filenameCaptor.capture());
-        assertEquals(filename, filenameCaptor.getValue());
+        verify(storageService).read(storageIdCaptor.capture(), filenameCaptor.capture());
+
+        assertThat(filenameCaptor)
+                .extracting(ArgumentCaptor::getValue)
+                .isEqualTo(filename);
+
+        assertThat(storageIdCaptor)
+                .extracting(ArgumentCaptor::getValue)
+                .isEqualTo(storageId);
     }
 }

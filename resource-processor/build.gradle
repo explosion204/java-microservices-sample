@@ -21,8 +21,8 @@ configurations {
 }
 
 dependencies {
+    implementation group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
     annotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
-    testAnnotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: bootVersion
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: bootVersion
@@ -36,6 +36,8 @@ dependencies {
     implementation group: 'org.apache.tika', name: 'tika-parsers-standard-package', version: tikaVersion
     implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
 
+    testImplementation group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
+    testAnnotationProcessor group: 'com.epam.microserviceslearning', name: 'common', version: commonVersion
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: bootVersion
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: cucumberVersion
     testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: cucumberVersion

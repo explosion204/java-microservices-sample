@@ -1,13 +1,13 @@
 package com.epam.microserviceslearning.processor.integration;
 
 import com.epam.microserviceslearning.common.testutils.TestUtils;
+import com.epam.microserviceslearning.common.testutils.WireMockUtils;
 import com.epam.microserviceslearning.processor.client.ResourceServiceClient;
 import com.epam.microserviceslearning.processor.client.SongServiceClient;
 import com.epam.microserviceslearning.processor.integration.config.BinaryProcessingHandlerTestConfiguration;
 import com.epam.microserviceslearning.processor.messaging.BinaryProcessingHandler;
 import com.epam.microserviceslearning.processor.model.IdDto;
 import com.epam.microserviceslearning.processor.service.SongMetadataExtractor;
-import com.epam.microserviceslearning.processor.utils.WireMockUtils;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.test.context.ActiveProfiles;
@@ -32,18 +31,12 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 @ContextConfiguration(classes = BinaryProcessingHandlerTestConfiguration.class)
 @ActiveProfiles("test")
 @TestPropertySource(properties = {
-        "resource-service.url=http://localhost:8070",
-        "song-service.url=http://localhost:8071"
+        "service-gateway.url=http://localhost:8091"
 })
 class BinaryProcessingHandlerTest {
 
     @Autowired
-    @Qualifier("resource-service")
-    private WireMockServer resourceService;
-
-    @Autowired
-    @Qualifier("song-service")
-    private WireMockServer songService;
+    private WireMockServer serviceGateway;
 
     @Autowired
     private SongMetadataExtractor metadataExtractor;
@@ -66,16 +59,23 @@ class BinaryProcessingHandlerTest {
 
     @SneakyThrows
     @Test
-    void test() {
+    void shouldHandleMessage() {
         // given
         final long initialId = 1;
-        final IdDto idDto = new IdDto();
-        idDto.setId(initialId);
-        final Message<String> message = MessageBuilder.withPayload(gson.toJson(idDto)).build();
+        final IdDto initialIdDto = new IdDto();
+        initialIdDto.setId(initialId);
+        final Message<String> message = MessageBuilder.withPayload(gson.toJson(initialIdDto)).build();
+
+        final long reloadedId = 2;
+        final IdDto reloadedIdDto = new IdDto();
+        reloadedIdDto.setId(reloadedId);
 
         final InputStream file = TestUtils.loadFileFromResources("test_data/sample.mp3");
-        WireMockUtils.addGetStub(resourceService, "/resources/.+", file.readAllBytes());
-        WireMockUtils.addPostStubForAnyRequestBody(songService, "/songs", gson.toJson(idDto));
+        serviceGateway.resetAll();
+        WireMockUtils.addGetStub(serviceGateway, "/resources/.+", file.readAllBytes());
+        WireMockUtils.addPostStubForAnyRequestBody(serviceGateway, "/songs", gson.toJson(initialIdDto));
+        WireMockUtils.addDeleteStub(serviceGateway, "/resources\\?id=.+", null);
+        WireMockUtils.addPostStubForAnyRequestBody(serviceGateway, "/resources\\?storageType=.+", gson.toJson(reloadedIdDto));
 
         // when & then
         assertThatNoException().isThrownBy(() -> ReflectionTestUtils.invokeMethod(handler, "handle", message));

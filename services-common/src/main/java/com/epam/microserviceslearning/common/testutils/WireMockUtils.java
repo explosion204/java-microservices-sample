@@ -1,9 +1,10 @@
-package com.epam.microserviceslearning.processor.utils;
+package com.epam.microserviceslearning.common.testutils;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.matching.AnythingPattern;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.delete;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
@@ -34,6 +35,18 @@ public class WireMockUtils {
         service.stubFor(
                 post(urlMatching(urlRegex))
                         .withRequestBody(new AnythingPattern())
+                        .willReturn(
+                                aResponse()
+                                        .withBody(responseBody)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withStatus(200)
+                        )
+        );
+    }
+
+    public static void addDeleteStub(WireMockServer service, String urlRegex, String responseBody) {
+        service.stubFor(
+                delete(urlMatching(urlRegex))
                         .willReturn(
                                 aResponse()
                                         .withBody(responseBody)
