@@ -1,5 +1,6 @@
 package com.epam.microserviceslearning.resource.service.binary;
 
+import com.epam.microserviceslearning.common.logging.LoggingService;
 import com.epam.microserviceslearning.common.storage.factory.StorageType;
 import com.epam.microserviceslearning.resource.domain.BinaryObject;
 import com.epam.microserviceslearning.resource.exception.BinaryDeletedException;
@@ -12,7 +13,6 @@ import com.epam.microserviceslearning.resource.service.model.BinaryObjectIdDto;
 import com.epam.microserviceslearning.resource.service.model.BinaryObjectIdListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +28,8 @@ import static com.epam.microserviceslearning.resource.domain.BinaryObject.Status
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class BinaryObjectService {
+    private final LoggingService logger;
     private final BinaryObjectRepository binaryObjectRepository;
     private final StorageService storageService;
     private final BinaryValidator validator;
@@ -67,7 +67,7 @@ public class BinaryObjectService {
             storageId = storageService.store(file, filename, storageType);
         } catch (BinaryUploadException e) {
             status = BinaryObject.Status.FAILED;
-            log.error("An error occurred during upload of file '{}', cause: {}", filename, e.getCause());
+            logger.error("An error occurred during upload of file '%s', cause: %s", filename, e.getCause());
         }
 
         final BinaryObject newObject = BinaryObject.builder()
@@ -107,14 +107,14 @@ public class BinaryObjectService {
         final Optional<BinaryObject> binaryObjectOpt = binaryObjectRepository.findById(id);
 
         if (binaryObjectOpt.isEmpty()) {
-            log.warn("Unable to find binary with id = {}", id);
+            logger.warn("Unable to find binary with id = %s", id);
             return false;
         }
 
         final BinaryObject binaryObject = binaryObjectOpt.get();
 
         if (binaryObject.getStatus() == BinaryObject.Status.DELETED) {
-            log.warn("Binary with id = {} is already deleted", id);
+            logger.warn("Binary with id = %s is already deleted", id);
             return false;
         }
 
@@ -136,7 +136,7 @@ public class BinaryObjectService {
 
             messageService.sendMessage(idDto);
         } else {
-            log.warn("Last upload wasn't successful, message is not sent");
+            logger.warn("Last upload wasn't successful, message is not sent");
         }
     }
 }

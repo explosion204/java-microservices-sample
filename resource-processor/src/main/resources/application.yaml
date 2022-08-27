@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: resource-service
+    name: resource-processor
 
   rabbitmq:
     host: ${RABBIT_HOST:localhost}
@@ -24,6 +24,11 @@ spring:
           consumer:
             max-attempts: 3
             auto-bind-dlq: true
+        logs-output:
+          destination: logs
+          group: main
+          producer:
+            required-groups: main
 
 resilience4j:
   retry:
@@ -39,7 +44,9 @@ resilience4j:
         slidingWindowSize: 30
         automaticTransitionFromOpenToHalfOpenEnabled: true
 
-
+service:
+  messaging:
+    logs-binding: logs-output
 
 service-gateway:
   url: ${SERVICE_GATEWAY_URL:http://localhost:8090}

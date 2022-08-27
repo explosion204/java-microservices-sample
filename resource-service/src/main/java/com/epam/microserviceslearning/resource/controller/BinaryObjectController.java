@@ -1,10 +1,11 @@
 package com.epam.microserviceslearning.resource.controller;
 
 import com.epam.microserviceslearning.common.csv.CsvService;
+import com.epam.microserviceslearning.common.logging.LoggingService;
 import com.epam.microserviceslearning.common.storage.factory.StorageType;
+import com.epam.microserviceslearning.resource.service.binary.BinaryObjectService;
 import com.epam.microserviceslearning.resource.service.model.BinaryObjectIdDto;
 import com.epam.microserviceslearning.resource.service.model.BinaryObjectIdListDto;
-import com.epam.microserviceslearning.resource.service.binary.BinaryObjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -29,6 +30,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/resources")
 @RequiredArgsConstructor
 public class BinaryObjectController {
+    private final LoggingService logger;
     private final CsvService csvService;
     private final BinaryObjectService binaryObjectService;
 
@@ -38,12 +40,20 @@ public class BinaryObjectController {
             @RequestParam(name = "storageType", defaultValue = "staging") StorageType storageType,
             @RequestBody byte[] bytes
     ) {
+        logger.info("Received upload request for %s storage", storageType.name());
+
         final InputStream file = new ByteArrayInputStream(bytes);
-        return binaryObjectService.save(file, storageType);
+        final BinaryObjectIdDto result = binaryObjectService.save(file, storageType);
+
+        logger.info("File is uploaded to %s storage", storageType.name());
+
+        return result;
     }
 
     @GetMapping(value = "{id}", produces = "audio/mpeg")
     public ResponseEntity<Resource> download(@PathVariable("id") long id) {
+        logger.info("Received download request for id = %s", id);
+
         final byte[] data = binaryObjectService.download(id);
         final ByteArrayResource resource = new ByteArrayResource(data);
 
@@ -56,6 +66,7 @@ public class BinaryObjectController {
     @ResponseStatus(OK)
     public BinaryObjectIdListDto delete(@RequestParam("id") String idsCsv) {
         final List<Long> ids = csvService.parse(idsCsv);
+        logger.info("Received delete request for ids = %s", idsCsv);
         return binaryObjectService.delete(ids);
     }
 }

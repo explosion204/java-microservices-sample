@@ -14,6 +14,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,10 +35,8 @@ class SongMetadataExtractorTest {
     void shouldExtractMetadata() {
         // given
         @Cleanup final InputStream file = loadFile("test_data/sample.mp3");
-        final long resourceId = 1;
 
         final SongMetadataDto expectedDto = SongMetadataDto.builder()
-                .resourceId(resourceId)
                 .name("A Stranger I Remain (Maniac Agenda Mix)")
                 .artist("Jamie Christopherson")
                 .album("Metal Gear Rising: Revengeance (Vocal Tracks)")
@@ -46,7 +45,7 @@ class SongMetadataExtractorTest {
                 .build();
 
         // when
-        final SongMetadataDto actualDto = uut.extract(file, resourceId);
+        final SongMetadataDto actualDto = uut.extract(file);
 
         // then
         assertEquals(expectedDto, actualDto);
@@ -55,6 +54,9 @@ class SongMetadataExtractorTest {
     @SneakyThrows
     private InputStream loadFile(String name) {
         final Resource resource = new ClassPathResource(name);
-        return resource.getInputStream();
+        // resource.getInputStream() returns BufferedInputStream with markpos = -1
+        // unit under test resets the stream after metadata parsing
+        // so that's why we need this hack
+        return new ByteArrayInputStream(resource.getInputStream().readAllBytes());
     }
 }

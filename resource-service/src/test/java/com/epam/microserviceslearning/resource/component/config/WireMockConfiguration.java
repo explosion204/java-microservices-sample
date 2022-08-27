@@ -1,4 +1,4 @@
-package com.epam.microserviceslearning.processor.utils;
+package com.epam.microserviceslearning.resource.component.config;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import org.apache.commons.lang3.StringUtils;
@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Bean;
 @TestConfiguration
 public class WireMockConfiguration {
     @Value("${service-gateway.url}")
-    private String serviceGatewayUrl;
+    private String gatewayUrl;
 
     @Bean(initMethod = "start", destroyMethod = "stop")
-    public WireMockServer serviceGatewayMock() {
-        final int port = getPort(serviceGatewayUrl);
+    public WireMockServer resourceServiceMock() {
+        final int port = getPort(gatewayUrl);
         return new WireMockServer(port);
     }
 

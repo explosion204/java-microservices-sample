@@ -1,2 +1,2 @@
-INSERT INTO binary_object (filename, status)
-VALUES ('test_filename', 'SUCCESS');
+INSERT INTO binary_object (storage_id, filename, status)
+VALUES (1, 'test_filename', 'SUCCESS');

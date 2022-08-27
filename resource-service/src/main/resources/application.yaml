@@ -24,6 +24,11 @@ spring:
           group: main
           producer:
             required-groups: main
+        logs-output:
+          destination: logs
+          group: main
+          producer:
+            required-groups: main
 
 aws:
   region: us-east-1
@@ -40,6 +45,7 @@ service:
     max-length: 199
   messaging:
     binary-processing-binding: binary-processing-output
+    logs-binding: logs-output
 
 eureka:
   client:

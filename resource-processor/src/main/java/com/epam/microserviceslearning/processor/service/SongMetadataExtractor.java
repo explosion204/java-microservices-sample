@@ -3,7 +3,6 @@ package com.epam.microserviceslearning.processor.service;
 import com.epam.microserviceslearning.processor.model.SongMetadataDto;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.tika.metadata.Metadata;
@@ -17,7 +16,6 @@ import java.time.Year;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class SongMetadataExtractor {
     private static final String NAME_KEY = "dc:title";
     private static final String ARTIST_KEY = "xmpDM:artist";

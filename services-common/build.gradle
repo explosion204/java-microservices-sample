@@ -31,12 +31,21 @@ repositories {
 }
 
 dependencies {
+    // TODO: make dependencies great again
     api group: 'org.springframework.boot', name: 'spring-boot-starter', version: bootVersion
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: springVersion
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion
 
     api group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
 
+    implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
+
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-core', version: awsSDKVersion
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: awsSDKVersion
     implementation group: 'commons-io', name: 'commons-io', version: apacheCommonsIOVersion
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-stream-rabbit', version: streamStarterRabbitVersion
+    implementation group: 'io.github.openfeign', name: 'feign-core', version: '11.9.1'
+
+    implementation group: 'com.github.tomakehurst', name: 'wiremock-jre8-standalone', version: wiremockVersion
 }

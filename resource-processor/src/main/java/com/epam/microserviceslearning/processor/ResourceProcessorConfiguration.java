@@ -1,6 +1,8 @@
 package com.epam.microserviceslearning.processor;
 
+import com.epam.microserviceslearning.common.logging.trace.FeignTraceInterceptor;
 import com.google.gson.Gson;
+import feign.RequestInterceptor;
 import io.github.resilience4j.retry.RetryRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,5 +33,10 @@ public class ResourceProcessorConfiguration {
     @Bean
     public Gson gson() {
         return new Gson();
+    }
+
+    @Bean
+    public RequestInterceptor feignTraceInterceptor() {
+        return new FeignTraceInterceptor();
     }
 }

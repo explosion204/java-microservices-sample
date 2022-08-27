@@ -1,10 +1,12 @@
 package com.epam.microserviceslearning.storageservice;
 
+import com.epam.microserviceslearning.common.logging.trace.WebMvcTraceInterceptor;
 import com.epam.microserviceslearning.common.storage.factory.StorageProvider;
 import com.epam.microserviceslearning.common.storage.factory.StorageType;
 import com.epam.microserviceslearning.common.web.converter.CaseInsensitiveEnumConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -17,5 +19,10 @@ public class StorageServiceConfiguration implements WebMvcConfigurer {
 
         enums.forEach(enumClass -> registry.addConverter(String.class, enumClass,
                 new CaseInsensitiveEnumConverter<>(enumClass)));
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new WebMvcTraceInterceptor());
     }
 }

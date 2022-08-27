@@ -1,6 +1,7 @@
 package com.epam.microserviceslearning.storageservice.controller;
 
 import com.epam.microserviceslearning.common.csv.CsvService;
+import com.epam.microserviceslearning.common.logging.LoggingService;
 import com.epam.microserviceslearning.common.storage.factory.StorageType;
 import com.epam.microserviceslearning.storageservice.service.StorageService;
 import com.epam.microserviceslearning.storageservice.service.model.StorageMetadataDto;
@@ -29,6 +30,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 @Validated
 public class StorageMetadataController {
+    private final LoggingService logger;
     private final StorageService storageService;
     private final CsvService csvService;
 
@@ -47,12 +49,14 @@ public class StorageMetadataController {
     @GetMapping("{id}")
     @ResponseStatus(OK)
     public StorageMetadataDto findStorageById(@PathVariable("id") long id) {
+        logger.info("Received find request for id = %s", id);
         return storageService.findById(id);
     }
 
     @GetMapping("random/{type}")
     @ResponseStatus(OK)
     public StorageMetadataDto findRandomStorage(@PathVariable("type") StorageType type) {
+        logger.info("Received find request for type = %s", type.name());
         return storageService.findRandomByType(type);
     }
 

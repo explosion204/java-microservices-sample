@@ -12,11 +12,13 @@ import org.springframework.boot.test.context.TestConfiguration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 
 @TestConfiguration
 @EnableAutoConfiguration
 @ComponentScan(basePackages = { "com.epam.microserviceslearning.resource" })
+@Import(WireMockConfiguration.class)
 @TestPropertySource(value = "classpath:/application.yaml")
 public class ResourceServiceTestConfiguration {
     public static final String BINDING_NAME = "binary-processing";
