@@ -10,7 +10,10 @@ import org.springframework.context.annotation.Profile;
 @TestConfiguration
 @EnableAutoConfiguration
 @ImportAutoConfiguration(TestChannelBinderConfiguration.class)
-@ComponentScan(basePackages = "com.epam.microserviceslearning.resource.service.messaging")
+@ComponentScan(basePackages = {
+        "com.epam.microserviceslearning.resource.service.messaging",
+        "com.epam.microserviceslearning.common.logging"
+})
 @Profile("test")
 public class MessageServiceTestConfiguration {
 

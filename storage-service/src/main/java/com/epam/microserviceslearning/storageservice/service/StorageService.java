@@ -1,5 +1,6 @@
 package com.epam.microserviceslearning.storageservice.service;
 
+import com.epam.microserviceslearning.common.logging.LoggingService;
 import com.epam.microserviceslearning.common.storage.factory.StorageType;
 import com.epam.microserviceslearning.storageservice.exception.NoStoragesException;
 import com.epam.microserviceslearning.storageservice.domain.StorageMetadata;
@@ -10,7 +11,6 @@ import com.epam.microserviceslearning.storageservice.service.model.StorageMetada
 import com.epam.microserviceslearning.storageservice.service.model.StorageMetadataIdListDto;
 import com.epam.microserviceslearning.storageservice.service.model.mapper.StorageMetadataDtoMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,8 +21,8 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class StorageService {
+    private final LoggingService logger;
     private final StorageMetadataRepository repository;
     private final StorageMetadataDtoMapper mapper;
 
@@ -81,7 +81,7 @@ public class StorageService {
         final Optional<StorageMetadata> storageMetadataOpt = repository.findById(id);
 
         if (storageMetadataOpt.isEmpty()) {
-            log.warn("Unable to find storage with id = {}", id);
+            logger.warn("Unable to find storage with id = %s", id);
             return false;
         }
 

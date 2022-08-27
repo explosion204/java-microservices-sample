@@ -1,12 +1,12 @@
 package com.epam.microserviceslearning.song.controller;
 
 import com.epam.microserviceslearning.common.csv.CsvService;
+import com.epam.microserviceslearning.common.logging.LoggingService;
 import com.epam.microserviceslearning.song.service.SongMetadataService;
 import com.epam.microserviceslearning.song.service.model.SongMetadataDto;
 import com.epam.microserviceslearning.song.service.model.SongMetadataIdDto;
 import com.epam.microserviceslearning.song.service.model.SongMetadataIdListDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,15 +23,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/songs")
 @RequiredArgsConstructor
-@Slf4j
 public class SongController {
+    private final LoggingService logger;
     private final CsvService csvService;
     private final SongMetadataService songMetadataService;
 
     @PostMapping
     public ResponseEntity<SongMetadataIdDto> createSongMetadata(@Valid @RequestBody SongMetadataDto songMetadataDto) {
         final SongMetadataIdDto songMetadataIdDto = songMetadataService.create(songMetadataDto);
-        log.info("Saved metadata: {}", songMetadataDto);
+        logger.info("Saved metadata: %s", songMetadataDto);
         return ResponseEntity.ok(songMetadataIdDto);
     }
 

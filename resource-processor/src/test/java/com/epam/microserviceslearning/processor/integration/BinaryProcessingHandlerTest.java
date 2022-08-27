@@ -1,5 +1,7 @@
 package com.epam.microserviceslearning.processor.integration;
 
+import com.epam.microserviceslearning.common.logging.LoggingService;
+import com.epam.microserviceslearning.common.logging.trace.AmqpTraceUtils;
 import com.epam.microserviceslearning.common.testutils.TestUtils;
 import com.epam.microserviceslearning.common.testutils.WireMockUtils;
 import com.epam.microserviceslearning.processor.client.ResourceServiceClient;
@@ -48,13 +50,19 @@ class BinaryProcessingHandlerTest {
     private SongServiceClient songServiceClient;
 
     @Autowired
+    private LoggingService logger;
+
+    @Autowired
+    private AmqpTraceUtils traceUtils;
+
+    @Autowired
     private Gson gson;
 
     private BinaryProcessingHandler handler;
 
     @BeforeEach()
     void setUp() {
-        handler = new BinaryProcessingHandler(resourceServiceClient, metadataExtractor, songServiceClient, gson);
+        handler = new BinaryProcessingHandler(logger, resourceServiceClient, metadataExtractor, songServiceClient, traceUtils, gson);
     }
 
     @SneakyThrows

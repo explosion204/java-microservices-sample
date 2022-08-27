@@ -9,9 +9,26 @@ spring:
   jpa:
     generate-ddl: true
 
+  rabbitmq:
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5672}
+    username: ${RABBIT_USERNAME:guest}
+    password: ${RABBIT_PASSWORD:guest}
+
+  cloud:
+    stream:
+      bindings:
+        logs-output:
+          destination: logs
+          group: main
+          producer:
+            required-groups: main
+
 service:
   csv:
     max-length: 5
+  messaging:
+    logs-binding: logs-output
 
 server:
   port: 8081

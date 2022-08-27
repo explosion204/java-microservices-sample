@@ -10,12 +10,14 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.TestPropertySource;
 
 @TestConfiguration
 @EnableAutoConfiguration
 @ComponentScan(basePackages = {
         "com.epam.microserviceslearning.processor.messaging",
-        "com.epam.microserviceslearning.processor.service"
+        "com.epam.microserviceslearning.processor.service",
+        "com.epam.microserviceslearning.common.logging"
 })
 @EnableFeignClients(clients = { ResourceServiceClient.class, SongServiceClient.class })
 @Import(value = { ResourceProcessorConfiguration.class, WireMockConfiguration.class })

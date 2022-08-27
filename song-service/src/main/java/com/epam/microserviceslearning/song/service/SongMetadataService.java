@@ -1,5 +1,6 @@
 package com.epam.microserviceslearning.song.service;
 
+import com.epam.microserviceslearning.common.logging.LoggingService;
 import com.epam.microserviceslearning.song.domain.SongMetadata;
 import com.epam.microserviceslearning.song.exception.MetadataNotFoundException;
 import com.epam.microserviceslearning.song.persistence.db.SongMetadataRepository;
@@ -8,7 +9,6 @@ import com.epam.microserviceslearning.song.service.model.SongMetadataIdDto;
 import com.epam.microserviceslearning.song.service.model.SongMetadataIdListDto;
 import com.epam.microserviceslearning.song.service.model.mapper.SongMetadataDtoMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -18,8 +18,8 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class SongMetadataService {
+    private final LoggingService logger;
     private final SongMetadataRepository songMetadataRepository;
     private final SongMetadataDtoMapper mapper;
 
@@ -57,7 +57,7 @@ public class SongMetadataService {
         final Optional<SongMetadata> songMetadataOpt = songMetadataRepository.findById(id);
 
         if (songMetadataOpt.isEmpty()) {
-            log.warn("Unable to find metadata with id = {}", id);
+            logger.warn("Unable to find metadata with id = %s", id);
             return false;
         }
 

@@ -4,6 +4,7 @@ volumes:
   resource-db-data:
   song-db-data:
   storage-db-data:
+  elasticsearch-data:
 
 services:
   resource-service:
@@ -81,7 +82,10 @@ services:
     image: 'localstack/localstack:latest'
 
   rabbit:
-    image: rabbitmq:3.10.6-alpine
+    image: rabbitmq:3.10.6-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
 
   service-registry:
     image: service-registry:latest
@@ -98,3 +102,33 @@ services:
       - 8090:8090
     depends_on:
       - service-registry
+
+  elasticsearch:
+    image: elasticsearch:8.3.3
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - XPACK_SECURITY_ENABLED=false
+      - xpack.security.enabled=false
+
+  logstash:
+    image: logstash:8.3.3
+    ports:
+      - 5046:5046
+    volumes:
+      - ./logstash/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./logstash/pipelines/rabbit.conf:/usr/share/logstash/config/pipelines/rabbit.conf
+
+
+  kibana:
+    image: kibana:8.3.3
+    ports:
+      - 5601:5601
+    env_file:
+      - ${ENV_FILE}
+    depends_on:
+      - elasticsearch
