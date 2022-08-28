@@ -8,6 +8,7 @@ import com.epam.microserviceslearning.storageservice.service.model.StorageMetada
 import com.epam.microserviceslearning.storageservice.service.model.StorageMetadataIdDto;
 import com.epam.microserviceslearning.storageservice.service.model.StorageMetadataIdListDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,7 @@ public class StorageMetadataController {
 
     @PostMapping
     @ResponseStatus(CREATED)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public StorageMetadataIdDto createStorage(@Valid @RequestBody StorageMetadataDto storageMetadataDto) {
         return storageService.create(storageMetadataDto);
     }
@@ -62,6 +64,7 @@ public class StorageMetadataController {
 
     @DeleteMapping
     @ResponseStatus(OK)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public StorageMetadataIdListDto deleteStorage(@RequestParam("id") String idsCsv) {
         final List<Long> ids = csvService.parse(idsCsv);
         return storageService.delete(ids);

@@ -5,6 +5,7 @@ import com.epam.microserviceslearning.storageservice.exception.StorageNotFoundEx
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -36,6 +38,13 @@ public class ApplicationExceptionHandler {
         final String errorMessage = String.format("Unable to find storage with id = %s", e.getId());
         logger.error(errorMessage);
         return buildErrorResponseEntity(NOT_FOUND, errorMessage);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDenied() {
+        final String errorMessage = "Access denied";
+        logger.error(errorMessage);
+        return buildErrorResponseEntity(FORBIDDEN, errorMessage);
     }
 
     @ExceptionHandler(Throwable.class)

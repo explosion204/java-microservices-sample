@@ -56,7 +56,7 @@ public class ServiceGatewayConfiguration {
                         .and()
                         .method(GET)
                         .uri(STORAGE_SERVICE_URI))
-                .route(r -> r.path("/storages")
+                .route(r -> r.path("/storages/**")
                         .and()
                         .method(GET)
                         .uri(STORAGE_SERVICE_URI))

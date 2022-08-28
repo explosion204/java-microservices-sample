@@ -4,6 +4,10 @@ import com.epam.microserviceslearning.common.logging.trace.WebMvcTraceIntercepto
 import com.epam.microserviceslearning.common.storage.factory.StorageProvider;
 import com.epam.microserviceslearning.common.storage.factory.StorageType;
 import com.epam.microserviceslearning.common.web.converter.CaseInsensitiveEnumConverter;
+import com.epam.microserviceslearning.storageservice.security.client.GithubApiFeignClient;
+import feign.Feign;
+import feign.jackson.JacksonDecoder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -24,5 +28,12 @@ public class StorageServiceConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new WebMvcTraceInterceptor());
+    }
+
+    @Bean
+    public GithubApiFeignClient githubApiFeignClient() {
+        return Feign.builder()
+                .decoder(new JacksonDecoder())
+                .target(GithubApiFeignClient.class, "https://api.github.com");
     }
 }
